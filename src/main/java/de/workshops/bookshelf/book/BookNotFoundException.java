@@ -1,4 +1,4 @@
-package de.workshops.bookshelf;
+package de.workshops.bookshelf.book;
 
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
