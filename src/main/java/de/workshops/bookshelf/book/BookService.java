@@ -76,6 +76,10 @@ class BookService {
         );
   }
 
+  Book createBook(Book book) {
+    return book;
+  }
+
   private boolean hasIsbn(Book book, String isbn) {
     return book.getIsbn().equals(isbn);
   }
