@@ -14,15 +14,10 @@ class BookService {
 
   private final BookRepository bookRepository;
 
-  private List<Book> books;
-
-  @PostConstruct
-  void init() {
-    books = bookRepository.findAllBooks();
-  }
-
   List<Book> getAllBooks() throws BookNotFoundException {
-    return this.books.stream()
+    return bookRepository
+        .findAll()
+        .stream()
         .collect(
             Collectors.collectingAndThen(
                 Collectors.toList(), books -> {
@@ -37,14 +32,18 @@ class BookService {
   }
 
   Book searchBookByIsbn(String isbn) throws BookNotFoundException {
-    return this.books.stream()
+    return bookRepository
+        .findAll()
+        .stream()
         .filter(book -> hasIsbn(book, isbn))
         .findFirst()
         .orElseThrow(BookNotFoundException::new);
   }
 
   List<Book> searchBookByAuthor(String author) throws BookNotFoundException {
-    return this.books.stream()
+    return bookRepository
+        .findAll()
+        .stream()
         .filter(book -> hasAuthor(book, author))
         .collect(
             Collectors.collectingAndThen(
@@ -60,7 +59,9 @@ class BookService {
   }
 
   List<Book> searchBooks(BookSearchRequest request) throws BookNotFoundException {
-    return this.books.stream()
+    return bookRepository
+        .findAll()
+        .stream()
         .filter(book -> hasAuthor(book, request.author()))
         .filter(book -> hasIsbn(book, request.isbn()))
         .collect(

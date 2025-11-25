@@ -12,10 +12,19 @@ import org.springframework.stereotype.Component;
 @Setter
 public class BookshelfApplicationProperties {
 
+  /**
+   * The application title
+   */
   private String title;
 
+  /**
+   * The application version
+   */
   private String version;
 
+  /**
+   * The OpenAPI configuration
+   */
   private CustomOpenApiConfig customOpenApiConfig;
 
   @Setter

@@ -1,3 +1,28 @@
 application:
   title: '@project.name@'
   version: '@project.version@'
+
+bookshelf:
+  some-number: 11
+  some-text: More information
+  some-list:
+    - First entry
+    - Second entry
+
+spring:
+  datasource:
+    url: jdbc:postgresql://34.79.208.232:5432/spring_boot_workshop_19_11_2025_db_trainer # adapt URL to your database
+    username: spring_boot_workshop_19_11_2025_trainer # adapt username accordingly
+    # set PG_PASSWORD in your environment, e.g., by running "export PG_PASSWORD=..." in the command line
+    password: ${PG_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Re-generating the DDL upon each application start to account for data model changes.
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+  sql:
+    init:
+      # The default value is 'embedded', which only works for in-memory databases.
+      # Since we're using a 'non-embedded' database here, we now need to set this to 'always'.
+      mode: always
