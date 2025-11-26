@@ -33,4 +33,6 @@ public class BookshelfApplicationProperties {
 
     private boolean enabled;
   }
+
+  private Map<String, BookshelfUser> credentials;
 }

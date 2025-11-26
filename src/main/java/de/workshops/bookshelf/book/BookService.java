@@ -15,77 +15,46 @@ class BookService {
   private final BookRepository bookRepository;
 
   List<Book> getAllBooks() throws BookNotFoundException {
-    return bookRepository
-        .findAll()
-        .stream()
-        .collect(
-            Collectors.collectingAndThen(
-                Collectors.toList(), books -> {
-                  if (books.isEmpty()) {
-                    throw new BookNotFoundException();
-                  }
+    final var books = bookRepository.findAll();
 
-                  return books;
-                }
-            )
-        );
+    return getBookList(books);
   }
 
   Book searchBookByIsbn(String isbn) throws BookNotFoundException {
-    return bookRepository
-        .findAll()
-        .stream()
-        .filter(book -> hasIsbn(book, isbn))
-        .findFirst()
-        .orElseThrow(BookNotFoundException::new);
-  }
+    final var book = bookRepository.findByIsbn(isbn);
+    if (book == null) {
+      throw new BookNotFoundException();
+    }
 
-  List<Book> searchBookByAuthor(String author) throws BookNotFoundException {
-    return bookRepository
-        .findAll()
-        .stream()
-        .filter(book -> hasAuthor(book, author))
-        .collect(
-            Collectors.collectingAndThen(
-                Collectors.toList(), books -> {
-                  if (books.isEmpty()) {
-                    throw new BookNotFoundException();
-                  }
-
-                  return books;
-                }
-            )
-        );
-  }
-
-  List<Book> searchBooks(BookSearchRequest request) throws BookNotFoundException {
-    return bookRepository
-        .findAll()
-        .stream()
-        .filter(book -> hasAuthor(book, request.author()))
-        .filter(book -> hasIsbn(book, request.isbn()))
-        .collect(
-            Collectors.collectingAndThen(
-                Collectors.toList(), books -> {
-                  if (books.isEmpty()) {
-                    throw new BookNotFoundException();
-                  }
-
-                  return books;
-                }
-            )
-        );
-  }
-
-  Book createBook(Book book) {
     return book;
   }
 
-  private boolean hasIsbn(Book book, String isbn) {
-    return book.getIsbn().equals(isbn);
+  List<Book> searchBookByAuthor(String author) throws BookNotFoundException {
+    return getBookList(bookRepository.findByAuthorContaining(author));
   }
 
-  private boolean hasAuthor(Book book, String author) {
-    return book.getAuthor().contains(author);
+  List<Book> searchBooks(BookSearchRequest request) throws BookNotFoundException {
+    return getBookList(
+        bookRepository.findByIsbnAndAuthorContaining(
+            request.isbn(),
+            request.author()
+        )
+    );
+  }
+
+  Book createBook(Book book) {
+    return bookRepository.save(book);
+  }
+
+  void deleteBook(Book book) {
+    bookRepository.delete(book);
+  }
+
+  private static List<Book> getBookList(List<Book> books) {
+    if (books.isEmpty()) {
+      throw new BookNotFoundException();
+    }
+
+    return books;
   }
 }
